@@ -21,15 +21,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
 using UnityEngine.UI;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using M2MqttUnity;
+using Random = UnityEngine.Random;
 
 /// <summary>
 /// Examples for the M2MQTT library (https://github.com/eclipse/paho.mqtt.m2mqtt),
@@ -58,8 +57,14 @@ namespace M2MqttUnity.Examples
 
         public void TestPublish()
         {
-            client.Publish("M2MQTT_Unity/test", System.Text.Encoding.UTF8.GetBytes("Test message"), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
-            Debug.Log("Test message published");
+            int X = Random.Range(1, 32);
+            int Y = Random.Range(1, 32);
+            int R = Random.Range(1, 128);
+            int G = Random.Range(1, 128);
+            int B = Random.Range(1, 120);
+            string xyrgbstring = String.Format("{0},{1},{2},{3},{4}", X, Y, R, G, B);
+            client.Publish("LEDS", System.Text.Encoding.UTF8.GetBytes(xyrgbstring), MqttMsgBase.QOS_LEVEL_EXACTLY_ONCE, false);
+            Debug.Log("Test message published: " + xyrgbstring);
             AddUiMessage("Test message published.");
         }
 
@@ -241,6 +246,7 @@ namespace M2MqttUnity.Examples
             {
                 UpdateUI();
             }
+            TestPublish();
         }
 
         private void OnDestroy()
